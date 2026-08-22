@@ -44,7 +44,11 @@
             <type>war</type>
         </dependency>
 
-        <!--    EJB modules    -->
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-inventory-ejb</artifactId>
+            <type>ejb</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -56,8 +60,10 @@
                 <artifactId>maven-ear-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
+                    <version>10</version>
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
                     <generateApplicationXml>true</generateApplicationXml>
+                    <fileNameMapping>no-version</fileNameMapping>
                     <modules>
                         <jarModule>
                             <groupId>com.globaltrade</groupId>
@@ -84,7 +90,11 @@
                             <bundleFileName>globaltrade-web.war</bundleFileName>
                         </webModule>
 
-                        <!--           EJB modules             -->
+                        <ejbModule>
+                            <groupId>com.globaltrade</groupId>
+                            <artifactId>globaltrade-inventory-ejb</artifactId>
+                            <bundleFileName>globaltrade-inventory-ejb.jar</bundleFileName>
+                        </ejbModule>
                     </modules>
                 </configuration>
             </plugin>
