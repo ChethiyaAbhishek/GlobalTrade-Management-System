@@ -49,6 +49,36 @@
             <artifactId>globaltrade-inventory-ejb</artifactId>
             <type>ejb</type>
         </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-vendor-ejb</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-custom-ejb</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-shipment-ejb</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-order-ejb</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-messaging-ejb</artifactId>
+            <type>ejb</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -63,7 +93,6 @@
                     <version>10</version>
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
                     <generateApplicationXml>true</generateApplicationXml>
-                    <fileNameMapping>no-version</fileNameMapping>
                     <modules>
                         <jarModule>
                             <groupId>com.globaltrade</groupId>
@@ -94,6 +123,36 @@
                             <groupId>com.globaltrade</groupId>
                             <artifactId>globaltrade-inventory-ejb</artifactId>
                             <bundleFileName>globaltrade-inventory-ejb.jar</bundleFileName>
+                        </ejbModule>
+
+                        <ejbModule>
+                            <groupId>com.globaltrade</groupId>
+                            <artifactId>globaltrade-vendor-ejb</artifactId>
+                            <bundleFileName>globaltrade-vendor-ejb.jar</bundleFileName>
+                        </ejbModule>
+
+                        <ejbModule>
+                            <groupId>com.globaltrade</groupId>
+                            <artifactId>globaltrade-custom-ejb</artifactId>
+                            <bundleFileName>globaltrade-custom-ejb.jar</bundleFileName>
+                        </ejbModule>
+
+                        <ejbModule>
+                            <groupId>com.globaltrade</groupId>
+                            <artifactId>globaltrade-shipment-ejb</artifactId>
+                            <bundleFileName>globaltrade-shipment-ejb.jar</bundleFileName>
+                        </ejbModule>
+
+                        <ejbModule>
+                            <groupId>com.globaltrade</groupId>
+                            <artifactId>globaltrade-order-ejb</artifactId>
+                            <bundleFileName>globaltrade-order-ejb.jar</bundleFileName>
+                        </ejbModule>
+
+                        <ejbModule>
+                            <groupId>com.globaltrade</groupId>
+                            <artifactId>globaltrade-messaging-ejb</artifactId>
+                            <bundleFileName>globaltrade-messaging-ejb.jar</bundleFileName>
                         </ejbModule>
                     </modules>
                 </configuration>

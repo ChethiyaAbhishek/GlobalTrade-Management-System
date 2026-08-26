@@ -1,9 +1,11 @@
-package com.globaltrade.inventory;
+package com.globaltrade.inventory.beans;
 
 import com.globaltrade.core.annotations.Audited;
 import com.globaltrade.core.entity.InventoryItem;
+import com.globaltrade.core.exception.InsufficientInventoryException;
 import com.globaltrade.core.exception.NoItemFoundException;
 import com.globaltrade.core.facade.BaseFacade;
+import com.globaltrade.inventory.local.InventoryFacadeLocal;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -15,12 +17,12 @@ import java.util.List;
 @Stateless
 @Audited
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class InventoryFacadeBean extends BaseFacade<InventoryItem> implements InventoryFacadeLocal{
+public class InventoryFacadeBean extends BaseFacade<InventoryItem> implements InventoryFacadeLocal {
 
     @PersistenceContext(unitName = "GlobalTrade-PU")
     private EntityManager em;
 
-    public InventoryFacadeBean(){
+    public InventoryFacadeBean() {
         super(InventoryItem.class);
     }
 
@@ -31,23 +33,25 @@ public class InventoryFacadeBean extends BaseFacade<InventoryItem> implements In
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void addStock(Long itemId, int qty) throws NoItemFoundException {
-        if(qty < 1){
-            throw new IllegalArgumentException("Inventory update stock quantity must be greater than 0");
-        }
-
+    public void adjustStock(Long itemId, int change) throws InsufficientInventoryException, NoItemFoundException {
         InventoryItem item = em.find(InventoryItem.class, itemId);
-        if(item == null){
+        if (item == null) {
             throw new NoItemFoundException(itemId);
         }
 
-        item.setQuantity(item.getQuantity() + qty);
+        int newQuantity = item.getQuantity() + change;
+        if (newQuantity < 0) {
+            throw new InsufficientInventoryException("ADJUST_STOCK: Insufficient stock for itemId: " + itemId
+                    + " - change requested: " + Math.abs(change) + ", existing: " + item.getQuantity());
+        }
+
+        item.setQuantity(newQuantity);
         em.merge(item);
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public boolean checkStock(Long itemId, int reqQty){
+    public boolean checkStock(Long itemId, int reqQty) {
         InventoryItem item = em.find(InventoryItem.class, itemId);
         return item != null && item.getQuantity() >= reqQty;
     }

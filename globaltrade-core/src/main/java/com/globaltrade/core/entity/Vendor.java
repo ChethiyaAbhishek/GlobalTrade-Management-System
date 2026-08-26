@@ -20,7 +20,9 @@ import java.time.Instant;
         @NamedQuery(name = "Vendor.findByStatus",
                 query = "SELECT v FROM Vendor v WHERE v.status = :status"),
         @NamedQuery(name = "Vendor.findByCountry",
-                query = "SELECT v FROM Vendor v WHERE v.country = :country")
+                query = "SELECT v FROM Vendor v WHERE v.country = :country"),
+        @NamedQuery(name = "Vendor.findTopRatedActive",
+                query = "SELECT v FROM Vendor v WHERE v.status = com.globaltrade.core.enums.VendorStatus.ACTIVE ORDER BY v.rating DESC")
 })
 @Getter
 @Setter

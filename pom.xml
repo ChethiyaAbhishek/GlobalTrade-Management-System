@@ -18,6 +18,8 @@
         <module>globaltrade-vendor-ejb</module>
         <module>globaltrade-web</module>
         <module>globaltrade-ear</module>
+        <module>globaltrade-custom-ejb</module>
+        <module>globaltrade-order-ejb</module>
     </modules>
 
     <properties>
@@ -79,6 +81,20 @@
             <dependency>
                 <groupId>com.globaltrade</groupId>
                 <artifactId>globaltrade-vendor-ejb</artifactId>
+                <version>${project.version}</version>
+                <type>ejb</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.globaltrade</groupId>
+                <artifactId>globaltrade-custom-ejb</artifactId>
+                <version>${project.version}</version>
+                <type>ejb</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.globaltrade</groupId>
+                <artifactId>globaltrade-order-ejb</artifactId>
                 <version>${project.version}</version>
                 <type>ejb</type>
             </dependency>

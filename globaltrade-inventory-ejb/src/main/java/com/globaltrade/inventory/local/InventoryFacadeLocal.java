@@ -1,6 +1,7 @@
-package com.globaltrade.inventory;
+package com.globaltrade.inventory.local;
 
 import com.globaltrade.core.entity.InventoryItem;
+import com.globaltrade.core.exception.InsufficientInventoryException;
 import com.globaltrade.core.exception.NoItemFoundException;
 import jakarta.ejb.Local;
 
@@ -9,11 +10,11 @@ import java.util.List;
 @Local
 public interface InventoryFacadeLocal {
 
-//    void create(InventoryItem item);
+    void create(InventoryItem item);
 
     InventoryItem findById(Long id);
 
-    void addStock(Long itemId, int change) throws NoItemFoundException;
+    void adjustStock(Long itemId, int change) throws InsufficientInventoryException, NoItemFoundException;
 
     boolean checkStock(Long itemId, int requiredQty);
 

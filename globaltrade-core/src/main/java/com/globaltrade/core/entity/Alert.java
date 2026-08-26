@@ -46,4 +46,11 @@ public class Alert implements Serializable {
     protected void prePersist(){
         this.processedAt = Instant.now();
     }
+
+    public Alert(String alertType, String message, Long entityId, String source) {
+        this.alertType = alertType;
+        this.message = message;
+        this.entityId = entityId;
+        this.source = source;
+    }
 }

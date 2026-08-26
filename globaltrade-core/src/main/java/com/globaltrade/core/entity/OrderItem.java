@@ -1,9 +1,7 @@
 package com.globaltrade.core.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,17 +10,11 @@ import java.math.BigDecimal;
 @Table(name = "order_item", indexes = {
         @Index(name = "idx_order_item_order", columnList = "order_id")
 })
-//@NamedQueries({
-//        @NamedQuery(name = "Order.findByOrderNumber",
-//                query = "SELECT o FROM Order o WHERE o.orderNumber = :orderNumber"),
-//        @NamedQuery(name = "Order.findAll",
-//                query = "SELECT o FROM Order o ORDER BY o.createdAt DESC"),
-//        @NamedQuery(name = "Order.findByStatus",
-//                query = "SELECT o FROM Order o WHERE o.status = :status")
-//})
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrderItem implements Serializable {
 
     @Id

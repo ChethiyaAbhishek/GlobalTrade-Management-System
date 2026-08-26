@@ -19,7 +19,9 @@ import java.time.LocalDate;
         @NamedQuery(name = "CustomsDocument.findApproachingDeadlines",
                 query = "SELECT d FROM CustomsDocument d WHERE d.deadline <= :deadline AND d.status <> com.globaltrade.core.enums.DocumentStatus.APPROVED ORDER BY d.deadline ASC"),
         @NamedQuery(name = "CustomsDocument.findByShipment",
-                query = "SELECT d FROM CustomsDocument d WHERE d.shipment.id = :shipmentId")
+                query = "SELECT d FROM CustomsDocument d WHERE d.shipment.id = :shipmentId"),
+        @NamedQuery(name = "CustomsDocument.findAwaitingClearance",
+                query = "SELECT d FROM CustomsDocument d WHERE d.status = com.globaltrade.core.enums.DocumentStatus.SUBMITTED ORDER BY d.filedAt ASC"),
 })
 @Getter
 @Setter
@@ -48,8 +50,13 @@ public class CustomsDocument implements Serializable {
     private Shipment shipment;
 
     @PrePersist
-    protected void prePersist(){
+    protected void prePersist() {
         this.status = DocumentStatus.DRAFT;
         this.filedAt = Instant.now();
+    }
+
+    public CustomsDocument(Shipment shipment, DocumentType type) {
+        this.shipment = shipment;
+        this.type = type;
     }
 }

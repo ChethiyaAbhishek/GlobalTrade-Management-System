@@ -17,6 +17,8 @@
         <class>com.globaltrade.core.entity.Alert</class>
         <class>com.globaltrade.core.entity.User</class>
         <class>com.globaltrade.core.entity.Role</class>
+        <class>com.globaltrade.core.entity.PurchaseRequest</class>
+        <class>com.globaltrade.core.entity.InventoryMovement</class>
 
         <properties>
             <property name="hibernate.enhancer.enableLazyInitialization" value="false"/>

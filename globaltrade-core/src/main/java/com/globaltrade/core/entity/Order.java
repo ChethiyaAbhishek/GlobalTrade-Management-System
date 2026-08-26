@@ -13,7 +13,8 @@ import java.time.Instant;
 @Entity
 @Table(name = "orders", indexes = {
         @Index(name = "idx_orders_created_at", columnList = "created_at"),
-        @Index(name = "idx_orders_status", columnList = "status")
+        @Index(name = "idx_orders_status", columnList = "status"),
+        @Index(name = "idx_orders_international", columnList = "international")
 })
 @NamedQueries({
         @NamedQuery(name = "Order.findByOrderNumber",
@@ -38,6 +39,12 @@ public class Order implements Serializable {
     @Column(name = "customer_name", nullable = false, length = 150)
     private String customerName;
 
+    @Column(name = "shipping_destination", nullable = false, length = 200)
+    private String shippingDestination;
+
+    @Column(nullable = false)
+    private Boolean international;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private OrderStatus status;
@@ -56,6 +63,9 @@ public class Order implements Serializable {
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
         this.status = OrderStatus.PROCESSING;
+        if(this.international == null){
+            this.international = false;
+        }
     }
 
     @PreUpdate
