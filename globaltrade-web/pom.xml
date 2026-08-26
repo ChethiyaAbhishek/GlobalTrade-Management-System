@@ -20,10 +20,76 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.globaltrade</groupId>
             <artifactId>globaltrade-core</artifactId>
             <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-security</artifactId>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-shipment-ejb</artifactId>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-inventory-ejb</artifactId>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-vendor-ejb</artifactId>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-custom-ejb</artifactId>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-order-ejb</artifactId>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globaltrade</groupId>
+            <artifactId>globaltrade-messaging-ejb</artifactId>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
         </dependency>
     </dependencies>
 

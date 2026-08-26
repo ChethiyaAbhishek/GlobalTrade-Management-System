@@ -21,6 +21,8 @@ public interface VendorFacadeLocal {
 
     void suspendVendor(Long id);
 
+    String whoAmI();
+
     VendorPerformance recordEvaluation(Long vendorId, double onTimeDeliveryRate,
                                        double defectRate, String evaluationPeriod);
 }

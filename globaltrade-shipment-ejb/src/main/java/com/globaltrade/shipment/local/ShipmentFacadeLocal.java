@@ -26,6 +26,8 @@ public interface ShipmentFacadeLocal {
 
     void notifyCarrier(Shipment shipment);
 
+    Shipment findById(Long id);
+
     List<Shipment> findAll();
 
     long count();

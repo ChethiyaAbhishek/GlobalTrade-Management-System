@@ -3,4 +3,82 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+
+    <welcome-file-list>
+        <welcome-file>views/dashboard.jsp</welcome-file>
+    </welcome-file-list>
+
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>globaltrade-realm</realm-name>
+        <form-login-config>
+            <form-login-page>/login.jsp</form-login-page>
+            <form-error-page>/login-error.jsp</form-error-page>
+        </form-login-config>
+    </login-config>
+
+    <security-role>
+        <role-name>LOGISTICS_COORDINATOR</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>CUSTOMS_AGENT</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>WAREHOUSE_MANAGER</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>VENDOR_REPRESENTATIVE</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>ADMIN</role-name>
+    </security-role>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Staff Area</web-resource-name>
+            <url-pattern>/dashboard</url-pattern>
+            <url-pattern>/track</url-pattern>
+            <url-pattern>/orders</url-pattern>
+            <url-pattern>/inventory</url-pattern>
+            <url-pattern>/vendors</url-pattern>
+            <url-pattern>/customs</url-pattern>
+            <url-pattern>/purchases</url-pattern>
+            <url-pattern>/api/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>LOGISTICS_COORDINATOR</role-name>
+            <role-name>CUSTOMS_AGENT</role-name>
+            <role-name>WAREHOUSE_MANAGER</role-name>
+            <role-name>VENDOR_REPRESENTATIVE</role-name>
+            <role-name>ADMIN</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Clearance Workspace</web-resource-name>
+            <url-pattern>/clearance</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>CUSTOMS_AGENT</role-name>
+            <role-name>ADMIN</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Administration</web-resource-name>
+            <url-pattern>/admin</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+
+
 </web-app>

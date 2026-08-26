@@ -41,7 +41,6 @@ public class VendorFacadeBean extends BaseFacade<Vendor> implements VendorFacade
 
     @Override
     @Validated
-    /// TODO::
     @RolesAllowed({Roles.COORDINATOR, Roles.ADMIN})
     public void createVendor(Vendor vendor) throws VendorValidationException {
         em.persist(vendor);
@@ -150,5 +149,27 @@ public class VendorFacadeBean extends BaseFacade<Vendor> implements VendorFacade
             throw new EJBAccessException("User: " + sessionContext.getCallerPrincipal().getName()
                     + " is not authorized to access vendor data");
         }
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public String whoAmI() {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("User: ").append(sessionContext.getCallerPrincipal().getName());
+        sb.append(" | Roles: ");
+
+        String[] allRoles = {
+                Roles.COORDINATOR, Roles.CUSTOMS_AGENT, Roles.WAREHOUSE_MANAGER,
+                Roles.VENDOR_REP, Roles.ADMIN
+        };
+
+        for (String role : allRoles) {
+            if (sessionContext.isCallerInRole(role)) {
+                sb.append(role).append(" ");
+            }
+        }
+
+        return sb.toString().trim();
     }
 }

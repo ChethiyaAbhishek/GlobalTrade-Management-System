@@ -153,6 +153,11 @@ public class ShipmentFacadeBean extends BaseFacade<Shipment> implements Shipment
     }
 
     @Override
+    public Shipment findById(Long id) {
+        return super.find(id);
+    }
+
+    @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public ShipmentStatusDTO getShipmentStatus(String trackingNumber) throws ShipmentNotFoundException {
 
