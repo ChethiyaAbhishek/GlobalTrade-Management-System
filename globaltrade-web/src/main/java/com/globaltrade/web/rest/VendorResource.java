@@ -1,7 +1,7 @@
 package com.globaltrade.web.rest;
 
 import com.globaltrade.core.dto.VendorReportDTO;
-import com.globaltrade.vendor.remote.VendorFacadeRemote;
+import com.globaltrade.vendor.local.VendorFacadeLocal;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBAccessException;
 import jakarta.ws.rs.GET;
@@ -16,7 +16,7 @@ import jakarta.ws.rs.core.Response;
 public class VendorResource {
 
     @EJB
-    private VendorFacadeRemote vendorFacade;
+    private VendorFacadeLocal vendorFacade;
 
     @GET
     @Path("/{vendorId}/report")

@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Vendors</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/style.css"/>
     </head>
     <body>
 
@@ -11,10 +12,10 @@
         <p><i>${identity}</i></p>
 
         <c:if test="${not empty message}">
-            <p style="color:#060">${message}</p>
+            <p class="msg-ok">${message}</p>
         </c:if>
         <c:if test="${not empty error}">
-            <p style="color:#a00">${error}</p>
+            <p class="msg-err">${error}</p>
         </c:if>
 
         <c:if test="${not empty report}">
@@ -42,10 +43,19 @@
                     <td>${v.contactEmail}</td>
                     <td>${v.rating}</td>
                     <td>${v.status}</td>
-                    <td>
-                        <a href="vendors?action=report&id=${v.id}">Report</a> |
-                        <a href="vendors?action=suspend&id=${v.id}">Suspend</a>
-                    </td>
+                    <c:if test="${isAdmin}">
+                        <td>
+                            <a href="vendors?action=report&id=${v.id}">Performance</a> |
+                            <c:choose>
+                                <c:when test="${v.status == 'SUSPENDED'}">
+                                    <a href="vendors?action=activate&id=${v.id}">Activate</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="vendors?action=suspend&id=${v.id}">Suspend</a>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                    </c:if>
                 </tr>
             </c:forEach>
         </table>

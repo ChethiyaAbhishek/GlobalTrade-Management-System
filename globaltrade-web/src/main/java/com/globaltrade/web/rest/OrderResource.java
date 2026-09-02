@@ -5,7 +5,6 @@ import com.globaltrade.core.entity.Order;
 import com.globaltrade.core.exception.InsufficientInventoryException;
 import com.globaltrade.core.exception.OrderProcessingException;
 import com.globaltrade.order.local.OrderFacadeLocal;
-import com.globaltrade.order.remote.OrderFacadeRemote;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -21,14 +20,11 @@ public class OrderResource {
     @EJB
     private OrderFacadeLocal orderFacadeLocal;
 
-    @EJB
-    private OrderFacadeRemote orderFacadeRemote;
-
     @GET
     @Path("/{orderNumber}")
     public Response getStatus(@PathParam("orderNumber") String orderNumber) {
 
-        OrderStatusDTO dto = orderFacadeRemote.getOrderStatus(orderNumber);
+        OrderStatusDTO dto = orderFacadeLocal.getOrderStatus(orderNumber);
 
         if (dto == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"Order not found: " + orderNumber + "\"}")

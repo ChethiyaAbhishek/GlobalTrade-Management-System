@@ -65,8 +65,14 @@ public class PurchaseRequestServlet extends HttpServlet {
             } catch (EJBAccessException e) {
                 req.setAttribute("error", "ACCESS DENIED: your role cannot perform '" + action + "'");
 
-            } catch (IllegalStateException | IllegalArgumentException e) {
+            } catch (IllegalStateException e) {
+                req.setAttribute("error", "THREE-WAY MATCH GUARD: " + e.getMessage()
+                        + " - mark the inbound shipment as DELIVERED first on the Shipments page.");
+
+            } catch (IllegalArgumentException e) {
                 req.setAttribute("error", e.getMessage());
+            } catch (Exception e) {
+                req.setAttribute("error", "Cannot " + action + " request #" + id + ": " + e.getMessage());
             }
         }
 
@@ -104,6 +110,8 @@ public class PurchaseRequestServlet extends HttpServlet {
 
         } catch (IllegalArgumentException e) {
             req.setAttribute("error", e.getMessage());
+        } catch (Exception e) {
+            req.setAttribute("error", "An Error Occurred: " + e.getMessage());
         }
 
         doGet(req, resp);

@@ -37,17 +37,14 @@ public class ComplianceInterceptor {
     }
 
     private boolean verifyCustomsRegulations(InvocationContext context) {
-        //TODO: In production: validate HS codes, export licenses, sanctioned-party lists
         return true;
     }
 
     private boolean verifyTradeAgreements(InvocationContext context) {
-        //TODO: In production: verify origin certificates against active trade agreements
         return true;
     }
 
     private boolean verifySecurityProtocols(InvocationContext context) {
-        //TODO: In production: verify data classification, access policy adherence
         return true;
     }
 }

@@ -1,5 +1,6 @@
 package com.globaltrade.order.local;
 
+import com.globaltrade.core.dto.OrderStatusDTO;
 import com.globaltrade.core.entity.Order;
 import com.globaltrade.core.exception.InsufficientInventoryException;
 import com.globaltrade.core.exception.OrderProcessingException;
@@ -21,4 +22,6 @@ public interface OrderFacadeLocal {
     List<Order> findAll();
 
     long count();
+
+    OrderStatusDTO getOrderStatus(String orderNumber);
 }

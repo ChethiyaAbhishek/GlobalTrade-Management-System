@@ -14,12 +14,14 @@ import java.time.LocalDate;
         @Index(name = "idx_shipment_status", columnList = "status"),
         @Index(name = "idx_shipment_created", columnList = "created_at"),
         @Index(name = "idx_shipment_type", columnList = "shipment_type"),
+        @Index(name = "idx_shipment_delayed_shipments", columnList = "status, estimated_delivery"),
 })
 @NamedQueries({
         @NamedQuery(name = "Shipment.findByStatus",
                 query = "SELECT s FROM Shipment s WHERE s.status = :status"),
         @NamedQuery(name = "Shipment.findDelayed",
-                query = "SELECT s FROM Shipment s WHERE s.status = com.globaltrade.core.enums.ShipmentStatus.DELAYED"),
+                query = "SELECT s FROM Shipment s WHERE s.status = com.globaltrade.core.enums.ShipmentStatus.DELAYED " +
+                        "AND s.estimatedDelivery < :now ORDER BY s.estimatedDelivery"),
         @NamedQuery(name = "Shipment.findByTrackingNumber",
                 query = "SELECT s FROM Shipment s WHERE s.trackingNumber = :trackingNumber"),
         @NamedQuery(name = "Shipment.findAll",

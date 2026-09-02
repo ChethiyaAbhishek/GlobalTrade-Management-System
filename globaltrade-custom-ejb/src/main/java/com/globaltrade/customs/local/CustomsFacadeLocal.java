@@ -1,6 +1,7 @@
 package com.globaltrade.customs.local;
 
 import com.globaltrade.core.entity.CustomsDocument;
+import com.globaltrade.core.enums.DocumentStatus;
 import com.globaltrade.core.exception.CustomsDeadlineException;
 import jakarta.ejb.Local;
 
@@ -18,4 +19,8 @@ public interface CustomsFacadeLocal {
     void processClearance(Long documentId);
 
     CustomsDocument findById(Long id);
+
+    void fileDraftDocument(Long documentId);
+
+    List<CustomsDocument> findByStatus(DocumentStatus status);
 }

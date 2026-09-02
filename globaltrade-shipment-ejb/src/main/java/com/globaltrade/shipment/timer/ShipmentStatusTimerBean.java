@@ -136,7 +136,9 @@ public class ShipmentStatusTimerBean {
 
         long totalShipments = em.createNamedQuery("Shipment.findAll", Shipment.class).getResultList().size();
 
-        long delayed = em.createNamedQuery("Shipment.findDelayed", Shipment.class).getResultList().size();
+        long delayed = em.createNamedQuery("Shipment.findDelayed", Shipment.class)
+                .setParameter("now", LocalDate.now())
+                .getResultList().size();
 
         report.append("Total shipments: ").append(totalShipments).append("\n");
         report.append("Delayed shipments: ").append(delayed).append("\n");
@@ -147,7 +149,9 @@ public class ShipmentStatusTimerBean {
 
 
     private void scanDelayedShipments() {
-        List<Shipment> delayed = em.createNamedQuery("Shipment.findDelayed", Shipment.class).getResultList();
+        List<Shipment> delayed = em.createNamedQuery("Shipment.findDelayed", Shipment.class)
+                .setParameter("now", LocalDate.now())
+                .getResultList();
 
         for (Shipment shipment : delayed) {
             alertPublisher.sendAlert(AlertTypes.SHIPMENT_DELAY,

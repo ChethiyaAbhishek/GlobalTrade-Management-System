@@ -2,56 +2,46 @@
 <html>
     <head>
         <title>Clearance Workspace</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/style.css"/>
     </head>
 
     <body>
-
         <jsp:include page="/views/nav.jsp"/>
-
         <h2>Customs Clearance Workspace</h2>
 
         <c:if test="${not empty message}">
-            <p style="color:#060">${message}</p>
+            <div class="msg-ok">${message}</div>
         </c:if>
 
         <c:if test="${not empty error}">
-            <p style="color:#a00">${error}</p>
+            <div class="msg-err">${error}</div>
         </c:if>
 
         <c:if test="${sessionActive}">
-            <div style="border:2px solid #1f3864;padding:10px;margin:10px 0">
-                <h3>Active inspection session</h3>
-                <ul>
-                    <c:forEach var="note" items="${notes}">
-                        <li>${note}</li>
-                    </c:forEach>
-                </ul>
-                <form method="get" action="clearance">
-                    <input type="hidden" name="action" value="note"/>
-                    <input name="text" style="width:300px" placeholder="Inspection note..."/>
-                    <input type="submit" value="Add note"/>
-                </form>
-                <p>
-                    <a href="clearance?action=approve">
-                        <b>Approve clearance</b>
-                    </a> |
-                </p>
-                <form method="get" action="clearance">
-                    <input type="hidden" name="action" value="reject"/>
-                    <input name="reason" placeholder="Rejection reason (mandatory)"/>
-                    <input type="submit" value="Reject"/>
-                </form>
-            </div>
+            <table>
+                <tr>
+                    <th>Active Inspection</th>
+                    <th>Decision</th>
+                </tr>
+                <tr>
+                    <td>Document under inspection</td>
+                    <td>
+                        <a href="clearance?action=approve"><b>Approve</b></a> &nbsp;|&nbsp;
+                        <form method="get" action="clearance" style="display:inline">
+                            <input type="hidden" name="action" value="reject"/>
+                            <input type="submit" value="Reject"/>
+                        </form>
+                    </td>
+                </tr>
+            </table>
         </c:if>
 
         <h3>Documents Awaiting Clearance</h3>
-
-        <table border="1" cellpadding="4" style="border-collapse:collapse">
+        <table>
             <tr>
                 <th>Doc #</th>
                 <th>Type</th>
                 <th>Shipment</th>
-                <th>Notes so far</th>
                 <th></th>
             </tr>
 
@@ -60,7 +50,6 @@
                     <td>${d.id}</td>
                     <td>${d.type}</td>
                     <td>${d.shipment.trackingNumber}</td>
-                    <td>${d.inspectionNotes}</td>
                     <td><a href="clearance?action=start&id=${d.id}">Start inspection</a></td>
                 </tr>
             </c:forEach>

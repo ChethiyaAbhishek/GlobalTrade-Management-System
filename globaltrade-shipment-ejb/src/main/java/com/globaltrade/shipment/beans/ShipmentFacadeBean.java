@@ -2,6 +2,7 @@ package com.globaltrade.shipment.beans;
 
 import com.globaltrade.core.annotations.Audited;
 import com.globaltrade.core.annotations.Monitored;
+import com.globaltrade.core.constants.AlertTypes;
 import com.globaltrade.core.dto.ShipmentStatusDTO;
 import com.globaltrade.core.entity.Shipment;
 import com.globaltrade.core.entity.ShipmentTrackingEvent;
@@ -9,8 +10,10 @@ import com.globaltrade.core.enums.ShipmentStatus;
 import com.globaltrade.core.enums.ShipmentType;
 import com.globaltrade.core.exception.ShipmentNotFoundException;
 import com.globaltrade.core.facade.BaseFacade;
+import com.globaltrade.core.messaging.AlertPublisherLocal;
 import com.globaltrade.shipment.local.ShipmentFacadeLocal;
 import com.globaltrade.shipment.remote.ShipmentFacadeRemote;
+import com.globaltrade.shipment.timer.ShipmentStatusTimerBean;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -36,6 +39,12 @@ public class ShipmentFacadeBean extends BaseFacade<Shipment> implements Shipment
     @EJB
     private RouteOptimizationBean routeOptimization;
 
+    @EJB
+    private ShipmentStatusTimerBean statusTimerBean;
+
+    @EJB
+    private AlertPublisherLocal alertPublisher;
+
     public ShipmentFacadeBean() {
         super(Shipment.class);
     }
@@ -57,6 +66,14 @@ public class ShipmentFacadeBean extends BaseFacade<Shipment> implements Shipment
             throw new IllegalArgumentException("Shipment type is required");
         }
 
+        if (shipment.getStatus() == null) {
+            if (shipment.getShipmentType() == ShipmentType.INBOUND) {
+                shipment.setStatus(ShipmentStatus.IN_TRANSIT);
+            } else {
+                shipment.setStatus(ShipmentStatus.PENDING);
+            }
+        }
+
         if (shipment.getCurrentLocation() == null) {
             shipment.setCurrentLocation(shipment.getOrigin());
         }
@@ -65,6 +82,8 @@ public class ShipmentFacadeBean extends BaseFacade<Shipment> implements Shipment
         shipment.setRouteDescription(route);
 
         em.persist(shipment);
+
+        statusTimerBean.scheduleStatusCheck(shipment.getTrackingNumber(), 30 * 60 * 1000);
 
         em.persist(ShipmentTrackingEvent.builder()
                 .eventType("SHIPMENT_CREATED")
@@ -104,6 +123,19 @@ public class ShipmentFacadeBean extends BaseFacade<Shipment> implements Shipment
         ShipmentStatus previous = shipment.getStatus();
         shipment.setStatus(newStatus);
 
+        if (newStatus == ShipmentStatus.IN_TRANSIT) {
+            shipment.setCurrentLocation("En route: " + shipment.getRouteDescription());
+
+        } else if (newStatus == ShipmentStatus.DELIVERED) {
+
+            shipment.setCurrentLocation(shipment.getDestination());
+            if (shipment.getActualDelivery() == null) {
+                shipment.setActualDelivery(LocalDate.now());
+            }
+        } else if (newStatus == ShipmentStatus.DELAYED) {
+            shipment.setCurrentLocation("Delayed at: " + shipment.getCurrentLocation());
+        }
+
         if (newStatus == ShipmentStatus.DELIVERED && shipment.getActualDelivery() == null) {
             shipment.setActualDelivery(LocalDate.now());
         }
@@ -115,6 +147,13 @@ public class ShipmentFacadeBean extends BaseFacade<Shipment> implements Shipment
                 .shipment(shipment).build());
 
         em.merge(shipment);
+
+        if (newStatus == ShipmentStatus.DELAYED) {
+            alertPublisher.sendAlert(AlertTypes.SHIPMENT_DELAY,
+                    "Shipment " + shipment.getTrackingNumber() + " [" + shipment.getShipmentType()
+                            + "] is DELAYED at " + shipment.getCurrentLocation(),
+                    shipment.getId());
+        }
     }
 
     @Override
@@ -129,7 +168,10 @@ public class ShipmentFacadeBean extends BaseFacade<Shipment> implements Shipment
     @Override
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public List<Shipment> findDelayedShipments() {
-        return em.createNamedQuery("Shipment.findDelayed", Shipment.class).getResultList();
+        return em.createNamedQuery("Shipment.findDelayed", Shipment.class)
+                .setParameter("now", LocalDate.now())
+                .setMaxResults(100)
+                .getResultList();
     }
 
     @Override

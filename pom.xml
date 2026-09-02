@@ -34,6 +34,8 @@
         <lombok.version>1.18.42</lombok.version>
         <jstl.api.version>3.0.0</jstl.api.version>
         <glassfish.web.jstl.version>3.0.1</glassfish.web.jstl.version>
+        <payara.embedded.all.version>6.2025.11</payara.embedded.all.version>
+        <junit.jupiter.version>5.10.0</junit.jupiter.version>
     </properties>
 
     <dependencyManagement>
@@ -165,7 +167,23 @@
                 <artifactId>jakarta.servlet.jsp.jstl</artifactId>
                 <version>${glassfish.web.jstl.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>fish.payara.extras</groupId>
+                <artifactId>payara-embedded-all</artifactId>
+                <version>${payara.embedded.all.version}</version>
+                <scope>provided</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>

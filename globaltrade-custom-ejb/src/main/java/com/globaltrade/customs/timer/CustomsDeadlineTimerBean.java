@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -114,6 +115,20 @@ public class CustomsDeadlineTimerBean {
         }
 
         logger.info("TIMER: deadline scan complete: " + approaching.size() + " alert(s) published");
+    }
+
+    public List<String> listMyTimers() {
+        List<String> list = new ArrayList<>();
+        for (Timer t : timerService.getTimers()) {
+            list.add(getClass().getSimpleName() + " | " + t.getInfo()
+                    + " | next: " + safeNext(t));
+        }
+        return list;
+    }
+
+    private String safeNext(Timer t) {
+        try { return String.valueOf(t.getNextTimeout()); }
+        catch (Exception e) { return "single-action"; }
     }
 }
 

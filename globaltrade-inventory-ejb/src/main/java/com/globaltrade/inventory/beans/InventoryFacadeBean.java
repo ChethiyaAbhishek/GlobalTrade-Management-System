@@ -1,6 +1,7 @@
 package com.globaltrade.inventory.beans;
 
 import com.globaltrade.core.annotations.Audited;
+import com.globaltrade.core.dto.StockAdjustmentResult;
 import com.globaltrade.core.entity.InventoryItem;
 import com.globaltrade.core.exception.InsufficientInventoryException;
 import com.globaltrade.core.exception.NoItemFoundException;
@@ -33,7 +34,7 @@ public class InventoryFacadeBean extends BaseFacade<InventoryItem> implements In
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void adjustStock(Long itemId, int change) throws InsufficientInventoryException, NoItemFoundException {
+    public StockAdjustmentResult adjustStock(Long itemId, int change) throws InsufficientInventoryException, NoItemFoundException {
         InventoryItem item = em.find(InventoryItem.class, itemId);
         if (item == null) {
             throw new NoItemFoundException(itemId);
@@ -47,6 +48,8 @@ public class InventoryFacadeBean extends BaseFacade<InventoryItem> implements In
 
         item.setQuantity(newQuantity);
         em.merge(item);
+
+        return new StockAdjustmentResult(newQuantity, item.getUnitPrice());
     }
 
     @Override

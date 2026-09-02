@@ -12,7 +12,7 @@ public final class JndiLookupHelper {
 
     public static CustomsClearanceSessionBean lookupClearanceSessionBean() throws NamingException {
         InitialContext ctx = new InitialContext();
-        return (CustomsClearanceSessionBean) ctx.lookup("java:app/globaltrade-customs-ejb/CustomsClearanceSessionBean");
+        return (CustomsClearanceSessionBean) ctx.lookup("java:app/globaltrade-custom-ejb/CustomsClearanceSessionBean");
     }
 
 }

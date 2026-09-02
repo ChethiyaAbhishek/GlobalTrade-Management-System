@@ -7,13 +7,13 @@ import com.globaltrade.core.entity.VendorPerformance;
 import com.globaltrade.core.enums.VendorStatus;
 import com.globaltrade.core.messaging.AlertPublisherLocal;
 import com.globaltrade.vendor.local.VendorFacadeLocal;
-import jakarta.ejb.EJB;
-import jakarta.ejb.Schedule;
-import jakarta.ejb.Stateless;
+import jakarta.annotation.Resource;
+import jakarta.ejb.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -32,6 +32,9 @@ public class VendorAssessmentTimerBean {
 
     @EJB
     private AlertPublisherLocal alertPublisher;
+
+    @Resource
+    private TimerService timerService;
 
     @Schedule(dayOfWeek = "Mon", hour = "1", persistent = true, info = "VENDOR_ASSESSMENT_TIMER")
     public void weeklyVendorAssessment() {
@@ -121,6 +124,20 @@ public class VendorAssessmentTimerBean {
         double defectRate = total == 0 ? 0.0 : (problemShipments * 100.0) / total;
 
         return new ShipmentMetrics(total, onTimeRate, defectRate);
+    }
+
+    public List<String> listMyTimers() {
+        List<String> list = new ArrayList<>();
+        for (Timer t : timerService.getTimers()) {
+            list.add(getClass().getSimpleName() + " | " + t.getInfo()
+                    + " | next: " + safeNext(t));
+        }
+        return list;
+    }
+
+    private String safeNext(Timer t) {
+        try { return String.valueOf(t.getNextTimeout()); }
+        catch (Exception e) { return "single-action"; }
     }
 
     private boolean deliveredOnTime(Shipment shipment) {

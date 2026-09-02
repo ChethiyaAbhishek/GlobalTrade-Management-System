@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Purchase Requests</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/style.css"/>
     </head>
     <body>
         <jsp:include page="/views/nav.jsp"/>
@@ -9,11 +10,11 @@
         <h2>Purchase Requests (Automated Replenishment)</h2>
 
         <c:if test="${not empty message}">
-            <p style="color:#060">${message}</p>
+            <p class="msg-ok">${message}</p>
         </c:if>
 
         <c:if test="${not empty error}">
-            <p style="color:#a00">${error}</p>
+            <p class="msg-err">${error}</p>
         </c:if>
 
         <p>Filter:

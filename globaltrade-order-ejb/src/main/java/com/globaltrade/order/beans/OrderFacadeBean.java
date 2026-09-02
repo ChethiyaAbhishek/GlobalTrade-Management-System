@@ -1,9 +1,12 @@
 package com.globaltrade.order.beans;
 
 import com.globaltrade.core.annotations.Audited;
+import com.globaltrade.core.annotations.ExcludeFromAudit;
 import com.globaltrade.core.annotations.Monitored;
 import com.globaltrade.core.constants.AlertTypes;
+import com.globaltrade.core.constants.Roles;
 import com.globaltrade.core.dto.OrderStatusDTO;
+import com.globaltrade.core.dto.StockAdjustmentResult;
 import com.globaltrade.core.entity.*;
 import com.globaltrade.core.enums.*;
 import com.globaltrade.core.exception.CustomsDeadlineException;
@@ -17,6 +20,7 @@ import com.globaltrade.order.local.OrderFacadeLocal;
 import com.globaltrade.order.remote.OrderFacadeRemote;
 import com.globaltrade.shipment.local.ShipmentFacadeLocal;
 import jakarta.annotation.Resource;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -67,6 +71,8 @@ public class OrderFacadeBean extends BaseFacade<Order> implements OrderFacadeLoc
     }
 
     @Override
+    @Audited
+    @RolesAllowed({Roles.ADMIN, Roles.COORDINATOR, Roles.WAREHOUSE_MANAGER})
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Order placeOrder(String customerName, String shippingDestination, boolean international, Map<Long, Integer> itemQuantities)
             throws OrderProcessingException, InsufficientInventoryException {
@@ -107,14 +113,17 @@ public class OrderFacadeBean extends BaseFacade<Order> implements OrderFacadeLoc
                     throw new OrderProcessingException("Invalid quantity for item " + itemId);
                 }
 
-                InventoryItem item = em.find(InventoryItem.class, itemId);
+                InventoryItem item = em.getReference(InventoryItem.class, itemId);
                 if (item == null) {
                     throw new OrderProcessingException("Inventory item not found: " + itemId);
                 }
 
+                StockAdjustmentResult result = inventoryFacade.adjustStock(itemId, -quantity);
+                reserved.add(new long[]{itemId, quantity});
+
                 OrderItem orderItem = OrderItem.builder()
                         .quantity(quantity)
-                        .unitPrice(item.getUnitPrice())
+                        .unitPrice(result.getUnitPrice())
                         .order(order)
                         .inventoryItem(item).build();
 
@@ -124,16 +133,13 @@ public class OrderFacadeBean extends BaseFacade<Order> implements OrderFacadeLoc
                     firstItem = orderItem;
                 }
 
-                inventoryFacade.adjustStock(itemId, -quantity);
-                reserved.add(new long[]{itemId, quantity});
-
-                total = total.add(item.getUnitPrice().multiply(BigDecimal.valueOf(quantity)));
+                total = total.add(result.getUnitPrice().multiply(BigDecimal.valueOf(quantity)));
 
                 em.persist(InventoryMovement.builder()
                         .inventoryItem(item)
                         .movementType(MovementType.DISPATCH)
                         .quantityChange(-quantity)
-                        .unitCost(item.getUnitPrice())
+                        .unitCost(result.getUnitPrice())
                         .reference("ORDER#" + order.getId())
                         .performedBy(currentUser()).build());
             }
@@ -219,6 +225,12 @@ public class OrderFacadeBean extends BaseFacade<Order> implements OrderFacadeLoc
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public Order findById(Long id) {
         return super.find(id);
+    }
+
+    @Override
+    @ExcludeFromAudit
+    public List<Order> findAll() {
+        return super.findAll();
     }
 
     @Override

@@ -22,6 +22,8 @@ import java.time.LocalDate;
                 query = "SELECT d FROM CustomsDocument d WHERE d.shipment.id = :shipmentId"),
         @NamedQuery(name = "CustomsDocument.findAwaitingClearance",
                 query = "SELECT d FROM CustomsDocument d WHERE d.status = com.globaltrade.core.enums.DocumentStatus.SUBMITTED ORDER BY d.filedAt ASC"),
+        @NamedQuery(name = "CustomsDocument.findByStatus",
+                query = "SELECT d FROM CustomsDocument d WHERE d.status = :status ORDER BY d.filedAt DESC"),
 })
 @Getter
 @Setter

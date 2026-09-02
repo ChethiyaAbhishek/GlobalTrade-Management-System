@@ -213,7 +213,7 @@ public class PurchaseRequestFacadeBean extends BaseFacade<PurchaseRequest> imple
                 .getResultList();
 
         if (shipments.isEmpty()) {
-            throw new NotFoundException("Shipment record for the request #" + requestId + " not found");
+            throw new IllegalStateException("No inbound shipment linked to request #" + requestId);
         }
 
         if (shipments.get(0).getStatus() != ShipmentStatus.DELIVERED) {

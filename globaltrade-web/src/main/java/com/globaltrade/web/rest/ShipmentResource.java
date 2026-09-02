@@ -5,7 +5,6 @@ import com.globaltrade.core.entity.Shipment;
 import com.globaltrade.core.enums.ShipmentStatus;
 import com.globaltrade.core.exception.ShipmentNotFoundException;
 import com.globaltrade.shipment.local.ShipmentFacadeLocal;
-import com.globaltrade.shipment.remote.ShipmentFacadeRemote;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -21,14 +20,11 @@ public class ShipmentResource {
     @EJB
     private ShipmentFacadeLocal shipmentFacadeLocal;
 
-    @EJB
-    private ShipmentFacadeRemote shipmentFacadeRemote;
-
     @GET
     @Path("/{trackingNumber}")
     public Response getStatus(@PathParam("trackingNumber") String trackingNumber) {
         try {
-            ShipmentStatusDTO dto = shipmentFacadeRemote.getShipmentStatus(trackingNumber);
+            ShipmentStatusDTO dto = shipmentFacadeLocal.getShipmentStatus(trackingNumber);
             return Response.ok(dto).build();
         } catch (ShipmentNotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"" + e.getMessage() + "\"}").build();

@@ -45,7 +45,7 @@ public class OrderPlacementServlet extends HttpServlet {
 
         String customerName = req.getParameter("customerName");
         String destination = req.getParameter("shippingDestination");
-        boolean international = "on".equals(req.getParameter("international")); /// TODO: ------------------
+        boolean international = "on".equals(req.getParameter("international"));
 
         Map<Long, Integer> quantities = new LinkedHashMap<>();
 

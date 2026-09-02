@@ -1,5 +1,6 @@
 package com.globaltrade.inventory.local;
 
+import com.globaltrade.core.dto.StockAdjustmentResult;
 import com.globaltrade.core.entity.InventoryItem;
 import com.globaltrade.core.exception.InsufficientInventoryException;
 import com.globaltrade.core.exception.NoItemFoundException;
@@ -14,7 +15,7 @@ public interface InventoryFacadeLocal {
 
     InventoryItem findById(Long id);
 
-    void adjustStock(Long itemId, int change) throws InsufficientInventoryException, NoItemFoundException;
+    StockAdjustmentResult adjustStock(Long itemId, int change) throws InsufficientInventoryException, NoItemFoundException;
 
     boolean checkStock(Long itemId, int requiredQty);
 

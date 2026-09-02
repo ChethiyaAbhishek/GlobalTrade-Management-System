@@ -2,6 +2,7 @@ package com.globaltrade.web.servlet;
 
 import com.globaltrade.core.constants.Roles;
 import com.globaltrade.core.entity.Shipment;
+import com.globaltrade.core.enums.ShipmentStatus;
 import com.globaltrade.core.enums.ShipmentType;
 import com.globaltrade.core.exception.ShipmentNotFoundException;
 import com.globaltrade.shipment.local.ShipmentFacadeLocal;
@@ -28,6 +29,43 @@ public class ShipmentTrackingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
+        String action = req.getParameter("action");
+
+        boolean canUpdate = req.isUserInRole(Roles.ADMIN) || req.isUserInRole(Roles.WAREHOUSE_MANAGER);
+        req.setAttribute("canUpdate", canUpdate);
+
+        if (action != null && req.getParameter("id") != null) {
+            if (!canUpdate) {
+                req.setAttribute("error", "ACCESS DENIED: only warehouse managers update shipment statuses");
+            } else {
+                Long shipmentId = Long.parseLong(req.getParameter("id"));
+                try {
+                    switch (action) {
+                        case "dispatch":
+                            shipmentFacade.updateStatus(shipmentId, ShipmentStatus.IN_TRANSIT);
+                            req.setAttribute("message", "Shipment marked IN_TRANSIT (dispatched)");
+                            break;
+                        case "deliver":
+                            shipmentFacade.updateStatus(shipmentId, ShipmentStatus.DELIVERED);
+                            req.setAttribute("message", "Shipment marked DELIVERED - actualDelivery stamped");
+                            break;
+                        case "delay":
+                            shipmentFacade.updateStatus(shipmentId, ShipmentStatus.DELAYED);
+                            req.setAttribute("message", "Shipment marked DELAYED - alert sent to coordinator");
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (ShipmentNotFoundException e) {
+                    req.setAttribute("error", e.getMessage());
+                } catch (IllegalArgumentException e) {
+                    req.setAttribute("error", "Invalid status transition: " + e.getMessage());
+                } catch (Exception e) {
+                    req.setAttribute("error", "An Error Occurred: " + e.getMessage());
+                }
+            }
+        }
+
         String trackingNumber = req.getParameter("trackingNumber");
 
         if (trackingNumber != null && !trackingNumber.trim().isEmpty()) {
@@ -40,6 +78,8 @@ public class ShipmentTrackingServlet extends HttpServlet {
 
             } catch (ShipmentNotFoundException e) {
                 req.setAttribute("error", e.getMessage());
+            } catch (Exception e) {
+                req.setAttribute("error", "An Error Occurred: " + e.getMessage());
             }
         }
 

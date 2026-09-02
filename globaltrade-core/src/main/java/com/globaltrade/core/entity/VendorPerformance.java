@@ -14,7 +14,9 @@ import java.time.Instant;
 })
 @NamedQueries({
         @NamedQuery(name = "VendorPerformance.findByVendor",
-                query = "SELECT vp FROM VendorPerformance vp WHERE vp.vendor.id = :vendorId ORDER BY vp.evaluatedAt DESC")
+                query = "SELECT vp FROM VendorPerformance vp WHERE vp.vendor.id = :vendorId ORDER BY vp.evaluatedAt DESC"),
+        @NamedQuery(name = "VendorPerformance.findAllLatestFirst", query = "SELECT vp FROM VendorPerformance vp " +
+                "ORDER BY vp.evaluatedAt DESC, vp.id DESC")
 })
 @Getter
 @Setter
@@ -45,7 +47,7 @@ public class VendorPerformance implements Serializable {
     private Vendor vendor;
 
     @PrePersist
-    protected void prePersist(){
+    protected void prePersist() {
         this.evaluatedAt = Instant.now();
     }
 }

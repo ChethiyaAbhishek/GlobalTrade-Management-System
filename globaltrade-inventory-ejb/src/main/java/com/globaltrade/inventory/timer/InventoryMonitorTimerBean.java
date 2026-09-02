@@ -10,11 +10,10 @@ import com.globaltrade.inventory.beans.PurchaseRequestFacadeBean;
 import com.globaltrade.inventory.local.InventoryFacadeLocal;
 import com.globaltrade.inventory.local.PurchaseRequestFacadeLocal;
 import com.globaltrade.vendor.local.VendorFacadeLocal;
-import jakarta.ejb.EJB;
-import jakarta.ejb.Schedule;
-import jakarta.ejb.Schedules;
-import jakarta.ejb.Stateless;
+import jakarta.annotation.Resource;
+import jakarta.ejb.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -34,6 +33,9 @@ public class InventoryMonitorTimerBean {
 
     @EJB
     private AlertPublisherLocal alertPublisher;
+
+    @Resource
+    private TimerService timerService;
 
     @Schedule(hour = "*/6", persistent = true, info = "INVENTORY_MONITOR_TIMER")
     public void checkInventoryLevels() {
@@ -80,5 +82,19 @@ public class InventoryMonitorTimerBean {
         logger.info("STOCK REPORT: totalItems: " + totalItems
                 + ", lowStockItems: " + lowStockCount
                 + ", pendingPurchaseRequests: " + pendingRequests);
+    }
+
+    public List<String> listMyTimers() {
+        List<String> list = new ArrayList<>();
+        for (Timer t : timerService.getTimers()) {
+            list.add(getClass().getSimpleName() + " | " + t.getInfo()
+                    + " | next: " + safeNext(t));
+        }
+        return list;
+    }
+
+    private String safeNext(Timer t) {
+        try { return String.valueOf(t.getNextTimeout()); }
+        catch (Exception e) { return "single-action"; }
     }
 }

@@ -1,5 +1,6 @@
 package com.globaltrade.shipment.local;
 
+import com.globaltrade.core.dto.ShipmentStatusDTO;
 import com.globaltrade.core.entity.Shipment;
 import com.globaltrade.core.entity.ShipmentTrackingEvent;
 import com.globaltrade.core.enums.ShipmentStatus;
@@ -31,4 +32,6 @@ public interface ShipmentFacadeLocal {
     List<Shipment> findAll();
 
     long count();
+
+    ShipmentStatusDTO getShipmentStatus(String trackingNumber) throws ShipmentNotFoundException;
 }

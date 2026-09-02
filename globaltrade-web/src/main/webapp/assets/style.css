@@ -1,0 +1,56 @@
+* { box-sizing: border-box; }
+body {
+    margin: 0; background: #f1f5f9; color: #1e293b;
+    font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+}
+h2, h3 { color: #0f172a; margin: 24px 8px 12px; }
+p, i { margin: 8px; }
+
+/* Navigation */
+.gt-nav {
+    background: linear-gradient(90deg, #1e3a5f, #16324f);
+    padding: 14px 24px; display: flex; align-items: center; gap: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+.gt-nav .brand { color: #fff; font-weight: 700; font-size: 1.15em; letter-spacing: .5px; }
+.gt-nav a { color: #cbd5e1; text-decoration: none; font-size: .95em; }
+.gt-nav a:hover { color: #fff; }
+.gt-nav a.active { color: #fbbf24; font-weight: 700; }
+.gt-nav .user { margin-left: auto; color: #e2e8f0; font-size: .9em; }
+
+/* Cards & tables */
+table {
+    border-collapse: collapse; margin: 16px 8px; background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08); border-radius: 8px; overflow: hidden;
+    min-width: 60%;
+}
+th {
+    background: #1e3a5f; color: #fff; text-align: left;
+    padding: 10px 14px; font-size: .85em; text-transform: uppercase; letter-spacing: .4px;
+}
+td { padding: 10px 14px; border: none !important; font-size: .93em; }
+tr:nth-child(even) td { background: #f8fafc; }
+tr:hover td { background: #eef2ff; }
+
+/* Buttons & links */
+input[type="submit"], button {
+    background: #2563eb; color: #fff; border: none; border-radius: 6px;
+    padding: 7px 14px; font-size: .88em; cursor: pointer; margin: 2px;
+}
+input[type="submit"]:hover, button:hover { background: #1d4ed8; }
+input[type="text"], input[type="password"], select {
+    border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 10px; margin: 2px;
+}
+a { color: #2563eb; }
+
+/* Status badges */
+.badge {
+    display: inline-block; background: #e0e7ff; color: #3730a3;
+    border-radius: 999px; padding: 3px 10px; font-size: .8em; font-weight: 600;
+}
+
+/* Messages */
+.msg-ok { color: #15803d; background: #dcfce7; border-left: 4px solid #22c55e;
+    padding: 10px 14px; margin: 12px 8px; border-radius: 6px; }
+.msg-err { color: #b91c1c; background: #fee2e2; border-left: 4px solid #ef4444;
+    padding: 10px 14px; margin: 12px 8px; border-radius: 6px; }

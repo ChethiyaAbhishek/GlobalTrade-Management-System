@@ -77,6 +77,9 @@ public class CustomsClearanceServlet extends HttpServlet {
 
         } catch (NamingException e) {
             req.setAttribute("error", "Clearance service unavailable: " + e.getMessage());
+
+        } catch (Exception e) {
+            req.setAttribute("error", "An Error Occurred: " + e.getMessage());
         }
 
         req.setAttribute("awaiting", customsFacade.getDocumentsAwaitingClearance());

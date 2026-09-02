@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Inventory</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/style.css"/>
     </head>
     <body>
 

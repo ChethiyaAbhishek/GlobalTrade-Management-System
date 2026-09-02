@@ -22,7 +22,9 @@ import java.time.Instant;
         @NamedQuery(name = "Vendor.findByCountry",
                 query = "SELECT v FROM Vendor v WHERE v.country = :country"),
         @NamedQuery(name = "Vendor.findTopRatedActive",
-                query = "SELECT v FROM Vendor v WHERE v.status = com.globaltrade.core.enums.VendorStatus.ACTIVE ORDER BY v.rating DESC")
+                query = "SELECT v FROM Vendor v WHERE v.status = com.globaltrade.core.enums.VendorStatus.ACTIVE ORDER BY v.rating DESC"),
+        @NamedQuery(name = "Vendor.findByRepresentative",
+                query = "SELECT v FROM Vendor v WHERE v.representative.username = :username")
 })
 @Getter
 @Setter
@@ -47,6 +49,10 @@ public class Vendor implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private VendorStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rep_user_id")
+    private User representative;
 
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;

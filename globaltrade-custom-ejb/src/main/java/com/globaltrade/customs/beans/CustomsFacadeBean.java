@@ -2,12 +2,14 @@ package com.globaltrade.customs.beans;
 
 import com.globaltrade.core.annotations.Audited;
 import com.globaltrade.core.annotations.Compliant;
+import com.globaltrade.core.constants.Roles;
 import com.globaltrade.core.entity.CustomsDocument;
 import com.globaltrade.core.enums.DocumentStatus;
 import com.globaltrade.core.exception.CustomsDeadlineException;
 import com.globaltrade.core.facade.BaseFacade;
 import com.globaltrade.customs.local.CustomsFacadeLocal;
 import com.globaltrade.customs.timer.CustomsDeadlineTimerBean;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -98,5 +100,34 @@ public class CustomsFacadeBean extends BaseFacade<CustomsDocument> implements Cu
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public CustomsDocument findById(Long id) {
         return super.find(id);
+    }
+
+    @Override
+    @RolesAllowed({Roles.CUSTOMS_AGENT, Roles.ADMIN})
+    public void fileDraftDocument(Long documentId) {
+
+        CustomsDocument doc = em.find(CustomsDocument.class, documentId);
+
+        if (doc == null) throw new IllegalArgumentException("Document not found: " + documentId);
+
+        if (doc.getStatus() != DocumentStatus.DRAFT) {
+            throw new IllegalStateException("Only DRAFT documents can be filed");
+        }
+
+        doc.setStatus(DocumentStatus.SUBMITTED);
+        doc.setFiledAt(Instant.now());
+        em.merge(doc);
+
+        if (doc.getDeadline() != null) {
+            customsDeadlineTimer.scheduleDeadlineAlert(doc.getId(), doc.getDeadline());
+        }
+    }
+
+    @Override
+    public List<CustomsDocument> findByStatus(DocumentStatus status) {
+
+        return em.createNamedQuery("CustomsDocument.findByStatus", CustomsDocument.class)
+                .setParameter("status", status)
+                .getResultList();
     }
 }

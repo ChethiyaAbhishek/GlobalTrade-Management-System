@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
-         version="4.0">
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
 
     <welcome-file-list>
-        <welcome-file>views/dashboard.jsp</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
     <login-config>
@@ -18,7 +18,7 @@
     </login-config>
 
     <security-role>
-        <role-name>LOGISTICS_COORDINATOR</role-name>
+        <role-name>COORDINATOR</role-name>
     </security-role>
 
     <security-role>
@@ -39,33 +39,87 @@
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Staff Area</web-resource-name>
+            <web-resource-name>Dashboard</web-resource-name>
             <url-pattern>/dashboard</url-pattern>
-            <url-pattern>/track</url-pattern>
-            <url-pattern>/orders</url-pattern>
-            <url-pattern>/inventory</url-pattern>
-            <url-pattern>/vendors</url-pattern>
-            <url-pattern>/customs</url-pattern>
-            <url-pattern>/purchases</url-pattern>
-            <url-pattern>/api/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>LOGISTICS_COORDINATOR</role-name>
-            <role-name>CUSTOMS_AGENT</role-name>
-            <role-name>WAREHOUSE_MANAGER</role-name>
-            <role-name>VENDOR_REPRESENTATIVE</role-name>
             <role-name>ADMIN</role-name>
+            <role-name>COORDINATOR</role-name>
+            <role-name>WAREHOUSE_MANAGER</role-name>
+            <role-name>CUSTOMS_AGENT</role-name>
+            <role-name>VENDOR_REPRESENTATIVE</role-name>
         </auth-constraint>
     </security-constraint>
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Clearance Workspace</web-resource-name>
+            <web-resource-name>Shipments</web-resource-name>
+            <url-pattern>/track</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+            <role-name>COORDINATOR</role-name>
+            <role-name>WAREHOUSE_MANAGER</role-name>
+            <role-name>CUSTOMS_AGENT</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Orders</web-resource-name>
+            <url-pattern>/orders</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+            <role-name>COORDINATOR</role-name>
+            <role-name>WAREHOUSE_MANAGER</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Inventory</web-resource-name>
+            <url-pattern>/inventory</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+            <role-name>COORDINATOR</role-name>
+            <role-name>WAREHOUSE_MANAGER</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Purchases</web-resource-name>
+            <url-pattern>/purchases</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+            <role-name>WAREHOUSE_MANAGER</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Vendors</web-resource-name>
+            <url-pattern>/vendors</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+            <role-name>COORDINATOR</role-name>
+            <role-name>VENDOR_REPRESENTATIVE</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Customs</web-resource-name>
+            <url-pattern>/customs</url-pattern>
             <url-pattern>/clearance</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>CUSTOMS_AGENT</role-name>
             <role-name>ADMIN</role-name>
+            <role-name>CUSTOMS_AGENT</role-name>
         </auth-constraint>
     </security-constraint>
 
@@ -79,6 +133,18 @@
         </auth-constraint>
     </security-constraint>
 
-
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>REST API</web-resource-name>
+            <url-pattern>/api/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+            <role-name>COORDINATOR</role-name>
+            <role-name>WAREHOUSE_MANAGER</role-name>
+            <role-name>CUSTOMS_AGENT</role-name>
+            <role-name>VENDOR_REPRESENTATIVE</role-name>
+        </auth-constraint>
+    </security-constraint>
 
 </web-app>

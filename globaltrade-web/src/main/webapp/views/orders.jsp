@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Orders</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/style.css"/>
     </head>
     <body>
 
@@ -10,7 +11,7 @@
         <h2>Customer Order Placement</h2>
 
         <c:if test="${not empty message}">
-            <p style="color:#060">
+            <p class="msg-ok">
                 <b>${message}</b>
             </p>
         </c:if>

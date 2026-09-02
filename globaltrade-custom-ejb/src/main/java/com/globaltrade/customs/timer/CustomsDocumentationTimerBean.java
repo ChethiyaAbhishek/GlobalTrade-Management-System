@@ -4,12 +4,12 @@ import com.globaltrade.core.constants.AlertTypes;
 import com.globaltrade.core.entity.Shipment;
 import com.globaltrade.core.messaging.AlertPublisherLocal;
 import com.globaltrade.customs.beans.CustomsDocumentationBean;
-import jakarta.ejb.EJB;
-import jakarta.ejb.Schedule;
-import jakarta.ejb.Stateless;
+import jakarta.annotation.Resource;
+import jakarta.ejb.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -26,6 +26,9 @@ public class CustomsDocumentationTimerBean {
 
     @EJB
     private AlertPublisherLocal alertPublisher;
+
+    @Resource
+    private TimerService timerService;
 
     @Schedule(hour = "*/8", persistent = true, info = "CUSTOMS_DOCUMENTATION_SERVICE")
     public void submitPendingDocumentation() {
@@ -46,5 +49,19 @@ public class CustomsDocumentationTimerBean {
         }
 
         logger.info("TIMER: customs documentation service complete: " + shipmentList.size() + " submitted ");
+    }
+
+    public List<String> listMyTimers() {
+        List<String> list = new ArrayList<>();
+        for (Timer t : timerService.getTimers()) {
+            list.add(getClass().getSimpleName() + " | " + t.getInfo()
+                    + " | next: " + safeNext(t));
+        }
+        return list;
+    }
+
+    private String safeNext(Timer t) {
+        try { return String.valueOf(t.getNextTimeout()); }
+        catch (Exception e) { return "single-action"; }
     }
 }

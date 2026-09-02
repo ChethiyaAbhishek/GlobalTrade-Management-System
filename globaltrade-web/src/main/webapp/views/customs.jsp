@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Customs</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/style.css"/>
     </head>
     <body>
 
@@ -10,11 +11,11 @@
         <h2>Customs Documentation & Deadlines</h2>
 
         <c:if test="${not empty message}">
-            <p style="color:#060">${message}</p>
+            <p class="msg-ok">${message}</p>
         </c:if>
 
         <c:if test="${not empty error}">
-            <p style="color:#a00">${error}</p>
+            <p class="msg-err">${error}</p>
         </c:if>
 
         <h3>Approaching Deadlines (3-day window)</h3>
@@ -35,6 +36,17 @@
                     <td>${d.status}</td>
                     <td>${d.filedAt}</td>
                     <td>${d.deadline}</td>
+                </tr>
+            </c:forEach>
+        </table>
+
+        <h3>Draft Documents (not yet filed)</h3>
+        <table border="1" cellpadding="4">
+            <tr><th>Doc #</th><th>Type</th><th>Shipment</th><th>Action</th></tr>
+            <c:forEach var="d" items="${drafts}">
+                <tr>
+                    <td>${d.id}</td><td>${d.type}</td><td>${d.shipment.trackingNumber}</td>
+                    <td><a href="customs?action=file&id=${d.id}">File Document</a></td>
                 </tr>
             </c:forEach>
         </table>
@@ -69,10 +81,6 @@
                     <option value="${s.id}">${s.trackingNumber} [${s.shipmentType}]</option>
                 </c:forEach>
             </select>
-
-            <label>
-                <input type="checkbox" name="force" value="true"/> Force gateway failure (rollback test)
-            </label>
 
             <input type="submit" value="Submit package"/>
         </form>
