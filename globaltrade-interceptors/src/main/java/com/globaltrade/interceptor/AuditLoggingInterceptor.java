@@ -6,7 +6,6 @@ import com.globaltrade.core.entity.AuditLog;
 import com.globaltrade.core.service.AuditLogService;
 import jakarta.annotation.Priority;
 import jakarta.annotation.Resource;
-import jakarta.ejb.EJB;
 import jakarta.ejb.SessionContext;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;

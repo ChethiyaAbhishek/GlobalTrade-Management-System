@@ -15,7 +15,6 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.ws.rs.NotFoundException;
 
 import java.time.LocalDate;
 import java.util.List;
